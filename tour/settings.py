@@ -57,7 +57,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'tour.urls'
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000','http://localhost:3001']
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000','http://192.168.100.142']
 
 TEMPLATES = [
     {
@@ -145,7 +145,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'touragency23@gmail.com'
-EMAIL_HOST_PASSWORD = 'pske jkad qako zcrk'
+EMAIL_HOST_PASSWORD = 'cgxa ioib nwqs qgbc'
+
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'

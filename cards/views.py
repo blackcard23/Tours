@@ -112,32 +112,24 @@ class PaymentView(CreateAPIView):
     serializer_class = PaymentSerializer
 
     def post(self, request):
-        # Получаем объекты бронирования и карты пользователя
         booking = get_object_or_404(Booking, id=request.data.get('booking_id'), user=request.user)
         card = get_object_or_404(Card, id=request.data.get('card_id'), user=request.user)
 
-        # Проверка, была ли уже оплачена бронь
         if booking.is_paid:
             return Response({"error": "Оплата уже была произведена."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Проверка наличия средств на карте
         if card.balance < booking.total_price:
             return Response({"error": "Недостаточно средств."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Получаем карту туров
         tour_card = get_object_or_404(Card, card_num="7777777777777777")
 
-        # Начинаем транзакцию
         with transaction.atomic():
-            # Обновляем баланс карты пользователя
             card.balance -= booking.total_price
             card.save()
 
-            # Обновляем баланс карты туров
             tour_card.balance += booking.total_price
             tour_card.save()
 
-            # Создаем запись о транзакции
             Transaction.objects.create(
                 value=-booking.total_price,
                 from_card=card,
@@ -155,7 +147,6 @@ class PaymentView(CreateAPIView):
                 f"<strong>Общая стоимость:</strong> {booking.total_price:.2f} $"
             ])
 
-            # Формируем HTML-сообщение для пользователя
             message = f"""
 <html>
     <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; background-color: #f5f5f5; margin: 0; padding: 0;">
